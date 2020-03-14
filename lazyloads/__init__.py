@@ -1,3 +1,4 @@
+from copy import deepcopy as dc
 class lzlist(list):
 	def __init__(self, ip):
 		super().__init__(ip)
@@ -21,19 +22,25 @@ class lzlist(list):
 		return list(set(self))
 
 	def split_by(self,val):
-		self = [self[i:i+val] for i in range(0,len(self),val)]
+		super().__init__([self[i:i+val] for i in range(0,len(self),val)])
 		return self
 
 	def join_all(self):
-		_o = []
-		for i in self:
-			_o += list(i)
-		self = lzlist(_o)
-		del _o
+		def _check():
+			for i in self:
+				if type(i)==list:
+					return True
+			return False
+
+		while _check():
+			_o = []
+			for i in self:
+				print(i,_o)
+				if type(i) == list:
+					_o += i 
+				else:
+					_o.append(i)
+			super().__init__(dc(_o))
+			print(self)
+			del _o
 		return self
-
-
-
-		
-
-
