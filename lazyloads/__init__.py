@@ -1,5 +1,5 @@
 from copy import deepcopy as dc
-import random
+import time
 class lzlist(list):
 	def __init__(self, ip):
 		super().__init__(ip)
@@ -28,10 +28,6 @@ class lzlist(list):
 	def join_all(self):
 		def _check():
 			return any([type(i)==list for i in self])
-			# for i in self:
-			# 	if type(i)==list:
-			# 		return True
-			# return False
 
 		while _check():
 			_o = []
@@ -71,8 +67,9 @@ class lzlist(list):
 		_g = mceil(len(self)/grps)
 		return [self[i:i+_g] for i in range(0,len(self),_g)]
 
-	def shuffle(self):
+	def deepshuffle(self,replace=True):
 		import time
+		import random
 		def _s(l):
 			random.seed(random.randrange(1,random.randrange(1000,10000000)))
 			random.shuffle(l)
@@ -83,7 +80,25 @@ class lzlist(list):
 					_s(i)
 			return l
 
-		return _s(self)
+		if replace:
+			_k = _s(self)
+		else:
+			_k = dc(self)
+			_k = _s(_k)
+
+		del time, random
+		return _k
+
+	def shuffle(self, s=time.time(),rp=False):
+		from random import shuffle, seed
+		seed(s)
+		k = dc(self)
+		shuffle(k)
+		if rp:
+			self=dc(k)
+		return k
+
+
 
 
 
