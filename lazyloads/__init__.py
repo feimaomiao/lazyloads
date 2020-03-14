@@ -1,4 +1,5 @@
 from copy import deepcopy as dc
+from re import search
 class lzlist(list):
 	def __init__(self, ip):
 		super().__init__(ip)
@@ -13,13 +14,12 @@ class lzlist(list):
 		return list(set([type(i) for i in self]))
 
 	def all_index(self,val):
-		for count,value in enumerate(self):
-			if value == val:
-				yield count
-		return None
+		return [count for count, value in enumerate(self) if value==val]
 
 	def unique(self):
-		return list(set(self))
+		_tmp = dc(self)
+		_tmp.join_all()
+		return list(set(_tmp))
 
 	def split_by(self,val):
 		super().__init__([self[i:i+val] for i in range(0,len(self),val)])
@@ -35,12 +35,22 @@ class lzlist(list):
 		while _check():
 			_o = []
 			for i in self:
-				print(i,_o)
 				if type(i) == list:
 					_o += i 
 				else:
 					_o.append(i)
 			super().__init__(dc(_o))
-			print(self)
 			del _o
 		return self
+
+	def similarto(self, sstr):
+		_r = []
+		for i in self:
+			_t = type(i)
+			if _t == list:
+				continue
+			try:
+				_r.append(_t(search(f'^.*{str(sstr)}.*$', str(i)).group(0)))
+			except AttributeError:
+				continue
+		return _r
