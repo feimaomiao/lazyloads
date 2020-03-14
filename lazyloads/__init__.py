@@ -1,5 +1,5 @@
 from copy import deepcopy as dc
-from re import search
+import random
 class lzlist(list):
 	def __init__(self, ip):
 		super().__init__(ip)
@@ -27,10 +27,11 @@ class lzlist(list):
 
 	def join_all(self):
 		def _check():
-			for i in self:
-				if type(i)==list:
-					return True
-			return False
+			return any([type(i)==list for i in self])
+			# for i in self:
+			# 	if type(i)==list:
+			# 		return True
+			# return False
 
 		while _check():
 			_o = []
@@ -44,6 +45,7 @@ class lzlist(list):
 		return self
 
 	def similarto(self, sstr):
+		from re import search
 		_r = []
 		for i in self:
 			_t = type(i)
@@ -53,4 +55,38 @@ class lzlist(list):
 				_r.append(_t(search(f'^.*{str(sstr)}.*$', str(i)).group(0)))
 			except AttributeError:
 				continue
+		del search
 		return _r
+
+	def split_mod(self, grps, rtt=list):
+		_gp = [[] for i in range(grps)]
+		_l = dc(self)
+		for count, i in enumerate(_l):
+			_gp[count%grps].append(i)
+		del _l
+		return rtt(_gp)
+
+	def split_to(self, grps):
+		from math import ceil as mceil
+		_g = mceil(len(self)/grps)
+		return [self[i:i+_g] for i in range(0,len(self),_g)]
+
+	def shuffle(self):
+		import time
+		def _s(l):
+			random.seed(random.randrange(1,random.randrange(1000,10000000)))
+			random.shuffle(l)
+			for i in l:
+				if isinstance(i, list):
+					random.seed(random.randrange(1,random.randrange(1000,10000000)))
+					random.shuffle(i)
+					_s(i)
+			return l
+
+		return _s(self)
+
+
+
+
+
+
