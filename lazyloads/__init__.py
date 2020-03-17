@@ -15,12 +15,15 @@ class lzlist(list):
 		except NameError:
 			return None
 
+	@property
 	def list_types(self):
 		return list(set([type(i) for i in self]))
 
+	@property
 	def all_index(self,val):
 		return [count for count, value in enumerate(self) if value==val]
 
+	@property
 	def unique(self):
 		_tmp = dc(self)
 		_tmp.join_all()
@@ -118,20 +121,66 @@ class lzlist(list):
 	def includes(self ,t):
 		return any([i==t for i in self])
 
+	@property
 	def all_with_type(self, t):
 		return [i for i in self if isinstance(i,t)]
 
+	@property
 	def all_without_type(self,t):
 		return [i for i in self if not isinstance(i,t)]
 
+	@property
 	def count_type(self, t):
 		return len(self.all_with_type(t))
 
-	def forall(self):
-		from itertools import product
-		_k = list([list(i) for i in product(self,repeat=2)])
-		del product
+	def forall(self,t='product'):
+		from itertools import product,permutations,combinations, combinations_with_replacement
+		if t=='product':
+			_k = list([list(i) for i in product(self,repeat=2)])
+		elif t=='permutations':
+			_k = list([list(i) for i in permutations(self,2)])
+		elif t=='combinations':
+			_k = list([list(i) for i in combinations(self,2)])
+		else:
+			_k = list([list(i) for i in combinations_with_replacement(self,2)])
+		del product, permutations, combinations, combinations_with_replacement
+		return lzlist(_k)
+
+	@property
+	def tostr(self):
+		return ''.join([chr(round(i)) for i in self]) if self.type_is_all((int, float)) else None
+
+
+
+class lzstr(str):
+
+	def toord(self, gen=True):
+		def _s(l):
+			for i in l:
+				yield ord(i)
+
+		return _s(self) if not gen else list(_s(self))
+
+	@property
+	def rot13(self):
+		from codecs import encode
+		_k = encode(self, 'rot_13')
+		del encode
+		return lzstr(_k)
+
+	@property
+	def reversed(self):
+		return lzstr(dc(lzstr(''.join(reversed(list(self))))))
+
+	def remove_all(self,n):
+		from re import sub
+		_k = lzstr(sub(str(n), '',self))
+		del sub
 		return _k
+
+	@property
+	def sorted(self):
+		return ''.join(sorted(self))
 
 
 
