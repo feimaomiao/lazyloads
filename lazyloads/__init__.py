@@ -11,7 +11,7 @@ class lzlist(list):
 
 	def includes_type(self,tp):
 		try:
-			return [i for i in self if type(i) == tp]
+			return lzlist([i for i in self if type(i) == tp])
 		except NameError:
 			return None
 
@@ -21,13 +21,13 @@ class lzlist(list):
 
 	@property
 	def all_index(self,val):
-		return [count for count, value in enumerate(self) if value==val]
+		return lzlist([count for count, value in enumerate(self) if value==val])
 
 	@property
 	def unique(self):
 		_tmp = dc(self)
 		_tmp.join_all()
-		return list(set(_tmp))
+		return lzlist(set(_tmp))
 
 	def split_by(self,val):
 		super().__init__([self[i:i+val] for i in range(0,len(self),val)])
@@ -60,7 +60,7 @@ class lzlist(list):
 			except AttributeError:
 				continue
 		del search
-		return _r
+		return lzlist(_r)
 
 	def split_mod(self, grps, rtt=list):
 		_gp = [[] for i in range(grps)]
@@ -95,7 +95,7 @@ class lzlist(list):
 			_k = _s(_k)
 
 		del shuffle
-		return _k
+		return lzlist(_k)
 
 	def shuffle(self,rp=False):
 		from random import shuffle
@@ -104,13 +104,13 @@ class lzlist(list):
 		if rp:
 			self=dc(k)
 		del shuffle
-		return k
+		return lzlist(k)
 
 	def choice(self,amount):
 		from random import choices
 		_p =  choices(self, k=amount)
 		del choices
-		return _p
+		return lzlist(_p)
 
 	def type_is_all(self, t):
 		return all([isinstance(i,t) for i in self])
@@ -123,11 +123,11 @@ class lzlist(list):
 
 	@property
 	def all_with_type(self, t):
-		return [i for i in self if isinstance(i,t)]
+		return lzlist([i for i in self if isinstance(i,t)])
 
 	@property
 	def all_without_type(self,t):
-		return [i for i in self if not isinstance(i,t)]
+		return lzlist([i for i in self if not isinstance(i,t)])
 
 	@property
 	def count_type(self, t):
@@ -148,7 +148,7 @@ class lzlist(list):
 
 	@property
 	def tostr(self):
-		return ''.join([chr(round(i)) for i in self]) if self.type_is_all((int, float)) else None
+		return lzstr('').join([chr(round(i)) for i in self]) if self.type_is_all((int, float)) else None
 
 
 
@@ -159,7 +159,7 @@ class lzstr(str):
 			for i in l:
 				yield ord(i)
 
-		return _s(self) if not gen else list(_s(self))
+		return _s(self) if not gen else lzlist(_s(self))
 
 	@property
 	def rot13(self):
@@ -180,7 +180,7 @@ class lzstr(str):
 
 	@property
 	def sorted(self):
-		return ''.join(sorted(self))
+		return lzstr(''.join(sorted(self)))
 
 
 
