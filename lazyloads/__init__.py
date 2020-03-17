@@ -1,10 +1,15 @@
 from copy import deepcopy as dc
 import time
+from random import seed as randomseed
+randomseed(time.time())
+del randomseed, time
+
+
 class lzlist(list):
 	def __init__(self, ip):
 		super().__init__(ip)
 
-	def find_type(self,tp):
+	def includes_type(self,tp):
 		try:
 			return [i for i in self if type(i) == tp]
 		except NameError:
@@ -60,23 +65,23 @@ class lzlist(list):
 		for count, i in enumerate(_l):
 			_gp[count%grps].append(i)
 		del _l
-		return rtt(_gp)
+		self = rtt(_gp)
+		return self
 
 	def split_to(self, grps):
 		from math import ceil as mceil
 		_g = mceil(len(self)/grps)
-		return [self[i:i+_g] for i in range(0,len(self),_g)]
+		self = [self[i:i+_g] for i in range(0,len(self),_g)]
+		del mceil
+		return self
 
 	def deepshuffle(self,replace=True):
-		import time
-		import random
+		from random import shuffle
 		def _s(l):
-			random.seed(random.randrange(1,random.randrange(1000,10000000)))
-			random.shuffle(l)
+			shuffle(l)
 			for i in l:
 				if isinstance(i, list):
-					random.seed(random.randrange(1,random.randrange(1000,10000000)))
-					random.shuffle(i)
+					shuffle(i)
 					_s(i)
 			return l
 
@@ -86,17 +91,50 @@ class lzlist(list):
 			_k = dc(self)
 			_k = _s(_k)
 
-		del time, random
+		del shuffle
 		return _k
 
-	def shuffle(self, s=time.time(),rp=False):
-		from random import shuffle, seed
-		seed(s)
+	def shuffle(self,rp=False):
+		from random import shuffle
 		k = dc(self)
 		shuffle(k)
 		if rp:
 			self=dc(k)
+		del shuffle
 		return k
+
+	def choice(self,amount):
+		from random import choices
+		_p =  choices(self, k=amount)
+		del choices
+		return _p
+
+	def type_is_all(self, t):
+		return all([isinstance(i,t) for i in self])
+
+	def type_includes(self, t):
+		return any([isinstance(i,t) for i in self])
+
+	def includes(self ,t):
+		return any([i==t for i in self])
+
+	def all_with_type(self, t):
+		return [i for i in self if isinstance(i,t)]
+
+	def all_without_type(self,t):
+		return [i for i in self if not isinstance(i,t)]
+
+	def count_type(self, t):
+		return len(self.all_with_type(t))
+
+	def forall(self):
+		from itertools import product
+		_k = list([list(i) for i in product(self,repeat=2)])
+		del product
+		return _k
+
+
+
 
 
 
