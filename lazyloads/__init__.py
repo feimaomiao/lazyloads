@@ -8,6 +8,7 @@ del randomseed, time
 class lzlist(list):
 	def __init__(self, ip):
 		super().__init__(ip)
+		self.__copy = ip
 
 	def includes_type(self,tp):
 		try:
@@ -16,10 +17,15 @@ class lzlist(list):
 			return None
 
 	@property
+	def revert(self):
+		super().__init__(dc(self.__copy))
+		return self.__copy
+	
+
+	@property
 	def list_types(self):
 		return list(set([type(i) for i in self]))
 
-	@property
 	def all_index(self,val):
 		return lzlist([count for count, value in enumerate(self) if value==val])
 
@@ -102,7 +108,7 @@ class lzlist(list):
 		k = dc(self)
 		shuffle(k)
 		if rp:
-			self=dc(k)
+			super().__init__(dc(k))
 		del shuffle
 		return lzlist(k)
 
@@ -149,6 +155,19 @@ class lzlist(list):
 	@property
 	def tostr(self):
 		return lzstr('').join([chr(round(i)) for i in self]) if self.type_is_all((int, float)) else None
+
+	def next(self, askval, rt=None):
+		def _g(self,askval):
+			_s = self.all_index(askval)
+			if len(_s) ==0:
+				yield[]
+			else:
+				try:
+					for i in self.all_index(askval):
+						yield self[i+1]
+				except IndexError:
+					yield self[0]
+		return _g(self, askval) if not rt else rt(_g(self,askval))
 
 
 
