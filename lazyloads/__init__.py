@@ -1,8 +1,8 @@
 from copy import deepcopy as dc
 import time
-from random import seed as randomseed
-randomseed(time.time())
-del randomseed, time
+from random import seed as randomseed, randrange as rrange
+randomseed(time.time()*rrange(1234,123456789))
+del randomseed, time,rrange
 
 
 class lzlist(list):
@@ -54,7 +54,7 @@ class lzlist(list):
 			del _o
 		return self
 
-	def similarto(self, sstr):
+	def similar_to(self, sstr):
 		from re import search
 		_r = []
 		for i in self:
@@ -68,20 +68,20 @@ class lzlist(list):
 		del search
 		return lzlist(_r)
 
-	def split_mod(self, grps, rtt=list):
+	def split_mod(self, grps):
 		_gp = [[] for i in range(grps)]
 		_l = dc(self)
 		for count, i in enumerate(_l):
 			_gp[count%grps].append(i)
 		del _l
-		self = rtt(_gp)
+		super().__init__(_gp)
 		return self
 
 	def split_to(self, grps):
 		from math import ceil as mceil
 		_g = mceil(len(self)/grps)
-		self = [self[i:i+_g] for i in range(0,len(self),_g)]
 		del mceil
+		super().__init__([self[i:i+_g] for i in range(0,len(self),_g)])
 		return self
 
 	def deepshuffle(self,replace=True):
@@ -107,6 +107,7 @@ class lzlist(list):
 		from random import shuffle
 		k = dc(self)
 		shuffle(k)
+		shuffle(k)
 		if rp:
 			super().__init__(dc(k))
 		del shuffle
@@ -127,25 +128,22 @@ class lzlist(list):
 	def includes(self ,t):
 		return any([i==t for i in self])
 
-	@property
 	def all_with_type(self, t):
 		return lzlist([i for i in self if isinstance(i,t)])
 
-	@property
 	def all_without_type(self,t):
 		return lzlist([i for i in self if not isinstance(i,t)])
 
-	@property
 	def count_type(self, t):
 		return len(self.all_with_type(t))
 
 	def forall(self,t='product'):
 		from itertools import product,permutations,combinations, combinations_with_replacement
-		if t=='product':
+		if t.startswith('pr'):
 			_k = list([list(i) for i in product(self,repeat=2)])
-		elif t=='permutations':
+		elif t.startswith('pe'):
 			_k = list([list(i) for i in permutations(self,2)])
-		elif t=='combinations':
+		elif t.startswith('c') and t.endswith('s'):
 			_k = list([list(i) for i in combinations(self,2)])
 		else:
 			_k = list([list(i) for i in combinations_with_replacement(self,2)])
@@ -156,18 +154,20 @@ class lzlist(list):
 	def tostr(self):
 		return lzstr('').join([chr(round(i)) for i in self]) if self.type_is_all((int, float)) else None
 
-	def next(self, askval, rt=None):
+	def next(self, askval=None, rt=False):
+		if not askval:
+			askval=self[0]
 		def _g(self,askval):
 			_s = self.all_index(askval)
 			if len(_s) ==0:
-				yield[]
+				return
 			else:
 				try:
 					for i in self.all_index(askval):
 						yield self[i+1]
 				except IndexError:
 					yield self[0]
-		return _g(self, askval) if not rt else rt(_g(self,askval))
+		return _g(self, askval) if rt else lzlist(_g(self,askval))
 
 
 
@@ -191,7 +191,7 @@ class lzstr(str):
 	def reversed(self):
 		return lzstr(dc(lzstr(''.join(reversed(list(self))))))
 
-	def remove_all(self,n):
+	def remove(self,n):
 		from re import sub
 		_k = lzstr(sub(str(n), '',self))
 		del sub
@@ -201,8 +201,44 @@ class lzstr(str):
 	def sorted(self):
 		return lzstr(''.join(sorted(self)))
 
+	def split_by(self, end):
+		return [self[i:i+end] for i in range(0,len(self),end)]
 
+class lzdict(dict):
+	def __init__(self,ip):
+		super().__init__(ip)
 
+	@property
+	def swap(self):
+		_k = {v:k for k,v in self.items()}
+		self.clear()
+		super().__init__(_k)
+		del _k
+		return self
+
+	def get_fromvalue(self,val=None,gen=False):
+
+		def _s(self,val):
+			for count, i in enumerate(self.values()):
+				if i==val:
+					yield lzlist(self.keys())[count]
+			return None
+
+		return _s(self,val) if gen else lzlist(_s(self,val))
+
+	@property
+	def lists(self):
+		return lzlist([lzlist(self.keys()),lzlist(self.values())])
+
+	@property
+	def listkeys(self):
+		return lzlist(self.lists[0])
+
+	@property	
+	def listvalues(self):
+		return lzlist(self.lists[1])
+
+	# def 
 
 
 
