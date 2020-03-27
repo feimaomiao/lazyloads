@@ -10,16 +10,22 @@ class lzlist(list):
 		super().__init__(ip)
 		self.__copy = ip
 
+	def __hash__(self):
+		from hashlib import sha512
+		_h = sha512()
+		[_h.update(str(i).encode('utf-32')) for i in self]
+		del sha512
+		return _h.hexdigest()
+
 	def includes_type(self,tp):
 		try:
 			return lzlist([i for i in self if type(i) == tp])
 		except NameError:
 			return None
 
-	@property
 	def revert(self):
 		super().__init__(dc(self.__copy))
-		return self.__copy
+		return self 
 	
 
 	@property
@@ -41,7 +47,7 @@ class lzlist(list):
 
 	def join_all(self):
 		def _check():
-			return any([type(i)==list for i in self])
+			return any([isinstance(i,list) for i in self])
 
 		while _check():
 			_o = []
@@ -170,6 +176,30 @@ class lzlist(list):
 		return _g(self, askval) if rt else lzlist(_g(self,askval))
 
 
+	def sort(self):
+		return sorted(self,key=lambda x: hash(x))
+
+
+
+	@staticmethod
+	def mkrandlist(length,start=None,end=None,sd=None):
+		from random import seed, randrange
+		if sd:
+			seed(sd)
+		if not start and end:
+			start=end
+			end= None
+		if not start:
+			start=100
+		_k=lzlist([])
+		for i in lzint(length):
+			seed(randrange(0,randrange(10000000000)))
+			if start and end:
+				_k.append(randrange(start,end))
+			else:
+				_k.append(randrange(start))
+		del seed, randrange
+		return _k
 
 class lzstr(str):
 
@@ -204,6 +234,10 @@ class lzstr(str):
 	def split_by(self, end):
 		return [self[i:i+end] for i in range(0,len(self),end)]
 
+	def fillwith(self,tl,ends='0'):
+		return self+ends*(tl-len(self))
+
+
 class lzdict(dict):
 	def __init__(self,ip):
 		super().__init__(ip)
@@ -217,6 +251,8 @@ class lzdict(dict):
 		return self
 
 	def get_fromvalue(self,val=None,gen=False):
+		if not val:
+			val= self.listvalues[0]
 
 		def _s(self,val):
 			for count, i in enumerate(self.values()):
@@ -238,8 +274,62 @@ class lzdict(dict):
 	def listvalues(self):
 		return lzlist(self.lists[1])
 
-	# def 
+	def randitems(self,i):
+		return lzdict({k: v for k, v in lzlist(self.items()).choice(i)})
 
+
+class lzint(int):
+	def __iter__(self):
+		return iter(range(self))
+
+	def __len__(self):
+		return len(str(self))
+
+	@property
+	def isodd(self):
+		return self%2==1
+
+	@property
+	def iseven(self):
+		return self%2==0
+
+	def divisible_by(self,r):
+		return self % r==0
+
+	@property
+	def percentage(self):
+		return str(100*self)+str('%')
+
+	def round_sf(self,l):
+		return lzint(lzstr(str(self)[:l]).fillwith(len(self), 0))
+
+	@property
+	def reciprocal(self):
+		return 1/self
+
+class lzfloat(float):
+	def __iter__(self):
+		return iter(range(round(self)))
+
+	def __len__(self):
+		return len(''.join(str(self).split('.')))
+
+	@property
+	def digits_afterzero(self):
+		return len(str(self).split('.')[1])
+
+	@property
+	def digits_beforezero(self):
+		return len(str(self).split('.')[0])
+
+	def significant_figures(self):
+		return len(str(self))
+
+	def round_sf(self, l):
+		if l>self.digits_beforezero:
+			return round(self,l-self.digits_beforezero)
+		return lzint(lzstr(str(self)[:l]).fillwith(self.digits_beforezero))
+	
 
 
 
