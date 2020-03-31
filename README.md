@@ -1,3 +1,4 @@
+
 # lazyloads
 Python package for extra functions in builtin data types including:
 - list
@@ -11,6 +12,13 @@ or
 `python3 -m pip install lazyloads`
 ## Install requirements
 Python >= 3.5
+## Includes
+- [lzlist](#lzlist-object)
+- [lzstr](#lzstr-object)
+- [lzdict](#lzdict-object)
+- [lzint](#lzint-object)
+- [lzfloat](#lzfloat-object)
+
 ## Usage
 Lets say you have a common header like this:
 ```python
@@ -608,7 +616,7 @@ lzint(100).reciprocal
 lzint(123).reciprocal
 >> 0.008130081300813009
 ```
-### lzfloat
+### lzfloat object
 float is another immutable object and many functions couldn't be worked. 
 - \_\_iter__()
 > rounds the range of closest number
