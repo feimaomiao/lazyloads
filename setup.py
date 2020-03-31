@@ -5,8 +5,8 @@ with open('README.md', 'r') as fh:
 
 
 	setuptools.setup(
-	    name="timetester", 
-	    version="1.0.1",
+	    name="lazyloads", 
+	    version="0.0.1",
 	    author="Matthew Lam",
 	    author_email="lcpmatthew@gmail.com",
 	    description="Python Module to make your life easier",
