@@ -1,13 +1,13 @@
 from copy import deepcopy as _dc
 import time
 from random import seed as _seed ,randrange as _randrange ,sample as _sample
-from random import shuffle as _shuffle, choice as _choice
+from random import shuffle as _shuffle, choice as _choice, choices as _choices
 from itertools import product as _product, permutations as _permutations
 from itertools import combinations as _combinations,combinations_with_replacement as _combinations_with_replacement
 from hashlib import sha512 as _sha512
 from math import ceil as _mceil
 from string import ascii_letters as _ascii_chars, digits as _digs
-from re import search as _se
+from re import search as _se, sub as _sub
 _seed(time.time()*_randrange(1234,123456789))
 del time
 
@@ -25,13 +25,10 @@ class lzlist(list):
 	def __hash__(self):
 		_h = _sha512()
 		[_h.update(str(i).encode('utf-32')) for i in self]
-		return _h.hexdigest()
+		return int(_h.hexdigest(),16)
 
 	def includes_type(self,tp):
-		try:
-			return lzlist([i for i in self if type(i) == tp])
-		except NameError:
-			return None
+		return any([i for i in self if isinstance(i,tp)])
 
 	def revert(self):
 		super().__init__(_dc(self.__copy))
@@ -40,7 +37,7 @@ class lzlist(list):
 
 	@property
 	def list_types(self):
-		return list(set([type(i) for i in self]))
+		return lzlist(set([type(i) for i in self]))
 
 	def all_index(self,val):
 		return lzlist([count for count, value in enumerate(self) if value==val])
@@ -52,7 +49,7 @@ class lzlist(list):
 		return lzlist(set(_tmp))
 
 	def split_by(self,val):
-		super().__init__([self[i:i+val] for i in range(0,len(self),val)])
+		super().__init__([lzlist(self[i:i+val]) for i in range(0,len(self),val)])
 		return self
 
 	def join_all(self):
@@ -62,7 +59,7 @@ class lzlist(list):
 		while _check():
 			_o = []
 			for i in self:
-				if issubclass(type(i), list):
+				if isinstance(i, list):
 					_o += i 
 				else:
 					_o.append(i)
@@ -77,12 +74,12 @@ class lzlist(list):
 				continue
 			try:
 				_r.append(_t(_se(f'^.*{str(sstr)}.*$', str(i)).group(0)))
-			except AttributeError:
+			except Exception:
 				continue
 		return lzlist(_r)
 
 	def split_mod(self, grps):
-		_gp = [[] for i in range(grps)]
+		_gp = [lzlist([]) for i in range(grps)]
 		_l = _dc(self)
 		for count, i in enumerate(_l):
 			_gp[count%grps].append(i)
@@ -92,7 +89,7 @@ class lzlist(list):
 
 	def split_to(self, grps):
 		_g = _mceil(len(self)/grps)
-		super().__init__([self[i:i+_g] for i in range(0,len(self),_g)])
+		super().__init__([lzlist(self[i:i+_g]) for i in range(0,len(self),_g)])
 		return self
 
 	def deepshuffle(self,replace=True):
@@ -121,7 +118,7 @@ class lzlist(list):
 		return lzlist(k)
 
 	def choice(self,amount):
-		return lzlist(_sample((lzlist(self* (amount if amount>len(self) else 1)).join_all().shuffle()),amount))
+		return _choices(self,k=amount)
 
 	def type_is_all(self, t):
 		return all([isinstance(i,t) for i in self])
@@ -154,9 +151,9 @@ class lzlist(list):
 
 	@property
 	def tostr(self):
-		return lzstr('').join([chr(round(i)) for i in self]) if self.type_is_all((int, float)) else None
+		return ''.join([chr(round(i)) for i in self.all_with_type((int,float))])
 
-	def next(self, askval=None, rt=False):
+	def next(self, askval=None):
 		if not askval:
 			askval=self[0]
 		def _g(self,askval):
@@ -164,12 +161,30 @@ class lzlist(list):
 			if len(_s) ==0:
 				return
 			else:
-				try:
-					for i in self.all_index(askval):
+				for i in _s:
+					try:
 						yield self[i+1]
-				except IndexError:
-					yield self[0]
-		return _g(self, askval) if rt else lzlist(_g(self,askval))
+					except IndexError:
+						yield self[0]
+		return lzlist(_g(self,askval))
+
+	def before(self,askval= None):
+		if not bool(askval):
+			askval = self[0]
+
+		def _g(self,askval):
+			_s = self.all_index(askval)
+			if len(_s) == 0:
+				return
+			else:
+				for i in _s:
+					try:
+						yield self[i-1]
+					except IndexError:
+						yield self[-1]
+
+		return lzlist(_g(self,askval))
+
 
 	def run_all(self,*args,**kwargs):
 		try:
@@ -185,9 +200,7 @@ class lzlist(list):
 		return [self[i](*others, **kwargs) if i in margs else self[i]() for i in range(len(self))]
 
 	@staticmethod
-	def mkrandlist(length,start=None,end=None,sd=None):
-		if sd:
-			_seed(sd)
+	def mkrandlist(length,start=None,end=None):
 		if not start and end:
 			start=end
 			end= None
@@ -204,12 +217,8 @@ class lzlist(list):
 
 class lzstr(str):
 
-	def toord(self, gen=True):
-		def _s(l):
-			for i in l:
-				yield ord(i)
-
-		return _s(self) if not gen else lzlist(_s(self))
+	def toord(self):
+		return lzlist([ord(i) for i in self])
 
 	@property
 	def rot13(self):
@@ -223,9 +232,7 @@ class lzstr(str):
 		return lzstr(_dc(lzstr(''.join(reversed(list(self))))))
 
 	def remove(self,n):
-		from re import sub
-		_k = lzstr(sub(str(n), '',self))
-		del sub
+		_k = lzstr(_sub(str(n), '',self))
 		return _k
 
 	@property
@@ -241,7 +248,7 @@ class lzstr(str):
 	def shuffle(self):
 		_k=lzlist(self)
 		_k.shuffle(rp=True)
-		return ''.join(_k)
+		return ''.join(_k.shuffle())
 
 	def join_all_ints(self):
 		return lzint(''.join([i for i in self if i.isdigit()]))
@@ -257,6 +264,12 @@ class lzstr(str):
 class lzdict(dict):
 	def __init__(self,ip):
 		super().__init__(ip)
+
+	def __hash__(self):
+		_h = _sha512()
+		[_h.update(str(i).encode('utf-32')) for i in self.listkeys]
+		[_h.update(str(i).encode('utf-32')) for i in self.listvalues]
+		return int(_h.hexdigest(),16)
 
 	@property
 	def swap(self):
@@ -316,10 +329,17 @@ class lzdict(dict):
 class lzint(int):
 
 	def __iter__(self):
-		return iter(range(self))
+		return iter(range(0,self,self._get_difference()))
 
 	def __len__(self):
 		return len(str(self))
+
+	@property
+	def ispositive(self):
+		return self>0
+
+	def _get_difference(self):
+		return 1 if self.ispositive else -1 
 
 	@property
 	def isodd(self):
@@ -341,7 +361,7 @@ class lzint(int):
 
 class lzfloat(float):
 	def __iter__(self):
-		return iter(range(round(self)))
+		return lzint(round(self)).__iter__()
 
 	def __len__(self):
 		return len(''.join(str(self).split('.')))
@@ -352,11 +372,11 @@ class lzfloat(float):
 
 	@property
 	def digits_beforezero(self):
-		return len(str(self).split('.')[0])
+		return len(str(self).lstrip('0').split('.')[0])
 
 	@property 
 	def significant_figures(self):
-		return len(str(self).strip('0.'))
+		return len(str(self).lstrip('0.').rtrip('0'))
 
 	def round_sf(self, l):
 		if l>self.digits_beforezero:
