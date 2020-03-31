@@ -16,7 +16,7 @@ __author__  = 'Matthew Lam'
 __email__   = 'lcpmatthew@gmail.com'
 __version__ = '0.0.1'   
 __license__ = 'MIT'
-
+from importlib import reload as rl
 class lzlist(list):
 	def __init__(self, ip=[]):
 		super().__init__(ip)
@@ -243,6 +243,12 @@ class lzstr(str):
 		_k.shuffle(rp=True)
 		return ''.join(_k)
 
+	def join_all_ints(self):
+		return lzint(''.join([i for i in self if i.isdigit()]))
+
+	def sum_of_ints(self):
+		return lzint(sum([int(i) for i in self if i.isdigit()]))
+
 	@staticmethod
 	def randstring(l):
 		return ''.join([_choice(_ascii_chars+_digs) for i in lzint(l)])
@@ -285,8 +291,6 @@ class lzdict(dict):
 		return lzlist(self.lists[1])
 
 	def randitems(self,i):
-		if i>len(self):
-			return self
 		return lzdict({k: v for k, v in lzlist(self.items()).choice(i)})
 
 	def find_inkeys(self,searchstring):
@@ -307,9 +311,10 @@ class lzdict(dict):
 				_r.append(_t(_se(f'^.*{str(searchstring)}.*$',str(i)).group(0)))
 			except AttributeError:
 				continue
-		return {i:self[i] for i in lzlist([self.get_fromvalue(i) for i in _r]).join_all()}
+		return lzdict({i:self[i] for i in lzlist([self.get_fromvalue(i) for i in _r]).join_all()})
 
 class lzint(int):
+
 	def __iter__(self):
 		return iter(range(self))
 
@@ -324,19 +329,15 @@ class lzint(int):
 	def iseven(self):
 		return self%2==0
 
-	def divisible_by(self,r):
-		return self % r==0
-
-	@property
-	def percentage(self):
-		return str(100*self)+str('%')
+	def divisible_by(self,other):
+		return self % other==0
 
 	def round_sf(self,l):
-		return lzint(lzstr(str(self)[:l]).fillwith(len(self), 0))
+		return lzint(10**(len(self)-l) *round(self/10**(len(self)-l)))
 
 	@property
 	def reciprocal(self):
-		return 1/self
+		return lzfloat(1/self)
 
 class lzfloat(float):
 	def __iter__(self):
@@ -353,14 +354,14 @@ class lzfloat(float):
 	def digits_beforezero(self):
 		return len(str(self).split('.')[0])
 
+	@property 
 	def significant_figures(self):
-		return len(str(self))
+		return len(str(self).strip('0.'))
 
 	def round_sf(self, l):
 		if l>self.digits_beforezero:
 			return round(self,l-self.digits_beforezero)
-		print(10**(self.digits_beforezero-l))
-	
+		return lzfloat(lzint(self).round_sf(l))
 
 
 
