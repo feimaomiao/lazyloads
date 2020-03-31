@@ -16,7 +16,7 @@ __author__  = 'Matthew Lam'
 __email__   = 'lcpmatthew@gmail.com'
 __version__ = '0.0.1'   
 __license__ = 'MIT'
-from importlib import reload as rl
+
 class lzlist(list):
 	def __init__(self, ip=[]):
 		super().__init__(ip)
