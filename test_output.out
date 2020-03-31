@@ -1,0 +1,86 @@
+test_find_inkeys (test_lzl.test_lzdict) ... ok
+test_find_invalues (test_lzl.test_lzdict) ... ok
+test_get_fromvalue (test_lzl.test_lzdict) ... ok
+test_listkeys (test_lzl.test_lzdict) ... ok
+test_lists (test_lzl.test_lzdict) ... ok
+test_listvalues (test_lzl.test_lzdict) ... ok
+test_randitems (test_lzl.test_lzdict) ... 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+For test lzdict.randitems:
+Random items will not duplicate therefore the length will not be equal
+Full dict: {1: 'a', 2: 'b', 3: 'c', 4: 'd'}
+Random item amount: 8
+Random items: {1: 'a', 4: 'd', 3: 'c', 2: 'b'}
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ok
+test_swap (test_lzl.test_lzdict) ... ok
+test_digits_afterzero (test_lzl.test_lzfloat) ... ok
+test_digits_beforezero (test_lzl.test_lzfloat) ... ok
+test_len (test_lzl.test_lzfloat) ... ok
+test_round_sf (test_lzl.test_lzfloat) ... ok
+test_significant_figures (test_lzl.test_lzfloat) ... ok
+test_divisible_by (test_lzl.test_lzint) ... ok
+test_iseven (test_lzl.test_lzint) ... ok
+test_isodd (test_lzl.test_lzint) ... ok
+test_iter (test_lzl.test_lzint) ... ok
+test_len (test_lzl.test_lzint) ... ok
+test_reciprocal (test_lzl.test_lzint) ... ok
+test_round_sf (test_lzl.test_lzint) ... ok
+test_all_index (test_lzl.test_lzlist) ... ok
+test_all_with_type (test_lzl.test_lzlist) ... ok
+test_all_without_type (test_lzl.test_lzlist) ... ok
+test_basic (test_lzl.test_lzlist) ... ok
+test_choice (test_lzl.test_lzlist) ... ok
+test_count_type (test_lzl.test_lzlist) ... ok
+test_deepshuffle (test_lzl.test_lzlist) ... 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+For test lzl.deeppshuffle:
+Before shuffle: [1, 2, 3, 4, 5, 6, [7, 8, 9, [1, 2, 3, 4]]]
+After shuffle:  [5, 3, 1, 2, 4, [7, 9, 8, [4, 1, 2, 3]], 6]
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ok
+test_forall (test_lzl.test_lzlist) ... ok
+test_includes (test_lzl.test_lzlist) ... ok
+test_includetype (test_lzl.test_lzlist) ... ok
+test_join_all (test_lzl.test_lzlist) ... ok
+test_listtypes (test_lzl.test_lzlist) ... ok
+test_makerandlist (test_lzl.test_lzlist) ... ok
+test_next (test_lzl.test_lzlist) ... ok
+test_revert (test_lzl.test_lzlist) ... ok
+test_run_all (test_lzl.test_lzlist) ... ok
+test_shuffle (test_lzl.test_lzlist) ... 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+For test lzlist.shuffle:
+Before shuffle: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+After shuffle:  [2, 4, 7, 9, 1, 6, 3, 5, 8]
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ok
+test_similar_to (test_lzl.test_lzlist) ... ok
+test_split_by (test_lzl.test_lzlist) ... ok
+test_split_mod (test_lzl.test_lzlist) ... ok
+test_split_to (test_lzl.test_lzlist) ... ok
+test_tostr (test_lzl.test_lzlist) ... ok
+test_type_includes (test_lzl.test_lzlist) ... ok
+test_type_is_all (test_lzl.test_lzlist) ... ok
+test_unique (test_lzl.test_lzlist) ... ok
+test_fillwith (test_lzl.test_lzstr) ... ok
+test_join_all_ints (test_lzl.test_lzstr) ... ok
+test_remove (test_lzl.test_lzstr) ... ok
+test_reversed (test_lzl.test_lzstr) ... ok
+test_rot13 (test_lzl.test_lzstr) ... ok
+test_shuffle (test_lzl.test_lzstr) ... 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+For test lzstr.shuffle:
+Before shuffle: abcdefg
+After shuffle:  abgfedc
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ok
+test_sorted (test_lzl.test_lzstr) ... ok
+test_split_by (test_lzl.test_lzstr) ... ok
+test_sum_of_ints (test_lzl.test_lzstr) ... ok
+test_toord (test_lzl.test_lzstr) ... ok
+
+----------------------------------------------------------------------
+Ran 55 tests in 0.544s
+
+OK
