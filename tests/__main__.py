@@ -2,7 +2,7 @@ import unittest
 import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from lazyloads import lzlist, lzdict, lzstr
+from lazyloads import lzlist, lzdict, lzstr, lzint, lzfloat
 import random
 
 # Allows reproduction
@@ -27,7 +27,7 @@ class test_lazyloads(unittest.TestCase):
 		var= [1,2,3,4,'b','c']
 		test= lzlist(var)
 		test.clear()
-		self.assertEqual(test.revert, var)
+		self.assertEqual(test.revert(), var)
 		self.assertEqual(test, var)
 
 	def test_listtypes(self):
@@ -50,7 +50,7 @@ class test_lazyloads(unittest.TestCase):
 		test=lzlist(var)
 		self.assertEqual(test.split_by(3),[[1,2,3],[4,5,6],[7,8,9]])
 		# split_by function replaces original string
-		test.revert
+		test.revert()
 		self.assertEqual(test.split_by(4),[[1,2,3,4],[5,6,7,8],[9]])
 
 	def test_join_all(self):
@@ -77,7 +77,7 @@ class test_lazyloads(unittest.TestCase):
 		var=[1,2,3,4,5,6,7,8]
 		test=lzlist(var)
 		self.assertEqual(test.split_to(2),[[1,2,3,4],[5,6,7,8]])
-		test.revert
+		test.revert()
 		self.assertEqual(test.split_to(3),[[1,2,3],[4,5,6],[7,8]])
 
 	def test_deepshuffle(self):
@@ -92,20 +92,15 @@ class test_lazyloads(unittest.TestCase):
 	def test_shuffle(self):
 		var=[1,2,3,4,5,6,7,8,9]
 		test=lzlist(var)
-		random.seed(1234)
-		random.shuffle(var)
-		random.shuffle(var)
-		random.seed(1234)
-		self.assertEqual(test.shuffle(),var)
+		self.assertTrue(all([i in test for i in var]))
 
 	def test_choice(self):
 		var=[1,2,3,4,5,6,7,8,9,0]
 		test=lzlist(var)
 		random.seed(1234)
-		# random should be the same as the seed is initialised
-		_k = random.choices(var, k=random.randrange(1,10))
-		random.seed(1234)
-		self.assertEqual(test.choice(random.randrange(1,10)),_k)
+		# self.assertEqual(test.choice(random.randrange(1,10)),_k)
+		self.assertTrue(all([i in var for i in test.choice(10)]))
+		self.assertTrue(len(test.choice(1010)), 1010)
 
 	def test_type_is_all(self):
 		var=[1,2,3,4,5,6,7]
@@ -167,6 +162,7 @@ class test_lazyloads(unittest.TestCase):
 		self.assertEqual(test.all_without_type(list),[1,'2',3,{1:2},{5},'4',5])
 		# test for >1 types
 		self.assertEqual(test.all_without_type((int,str,list)),[{1:2},{5}])
+		self.assertEqual(test.all_without_type((int,str,list,dict,set)),[])
 
 	def test_count_type(self):
 		var = [1,'2',[3],{4:'4'},{5},range(6),7,8,'9',{10}]
@@ -213,11 +209,37 @@ class test_lazyloads(unittest.TestCase):
 		test=lzlist(var)
 		self.assertEqual(test.next(0),[1])
 		self.assertEqual(test.next(5),[6])
+
+		# Final unit
 		self.assertEqual(test.next(9),[0])
+
+		# Default case
 		self.assertEqual(test.next() ,[1])
 
 		# Non existense case
 		self.assertEqual(test.next('a'),[])
+
+	def test_run_all(self):
+		# test function that will be called
+		def _t(v=1):
+			return lzint(v).iseven
+
+		var = [_t, _t, _t, _t, _t, print, _t, _t]
+		test= lzlist(var)
+		self.assertEqual(test.run_all([1,3,6],2), [False, True, False, True,False,None, True,False])
+		self.assertEqual(test.run_all([0,1,2],v=2),[True,True,True,False,False,None,False,False])
+
+	def test_makerandlist(self):
+		k = lzlist.mkrandlist(359,
+			# start
+			100,
+			# end
+			300,
+			#seed
+			1234)
+		self.assertTrue(len(k)==359)
+		self.assertTrue(all([i in range(100,300) for i in k]))
+
 
 class test_lazystring(unittest.TestCase):
 	def test_toord(self):
@@ -271,12 +293,23 @@ class test_lazystring(unittest.TestCase):
 		self.assertEqual(test.split_by(3),['aaa','bbb','ccc','ddd','eee','fff','ggg'])
 		self.assertEqual(test.split_by(6),['aaabbb','cccddd','eeefff','ggg'])
 
+	def test_fillwith(self):
+		var = '111'
+		test= lzstr(var)
+		self.assertEqual(test.fill(5,'0'), '11100')
+		self.assertEqual(test.fill(10,'a'),'111aaaaaaa')
+
 
 class tes_lazydict(unittest.TestCase):
 	def test_swap(self):
 		var= {1:2,2:3,3:4,4:5}
 		test=lzdict(var)
 		self.assertEqual(test.swap,{2:1,3:2,4:3,5:4})
+		var = {1:'a',2:'b',3:'c'}
+		test= lzdict(var)
+		self.assertEqual(test.swap,{'a':1,'b':2,'c': 3})
+
+	
 
 
 
