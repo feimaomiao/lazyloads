@@ -216,7 +216,7 @@ llist.includes('3')
 llist.includes(3)
 >> False
 ```
--all_with_type(t)
+- all_with_type(t)
 > returns a list with only the type of t
 ```python
 llist = lzlist([1,2,'3',4,5,6,'7','8','9'])
@@ -354,7 +354,7 @@ lstr = lzstr('abcdefg')
 lstr.toord()
 [97, 98, 99, 100, 101, 102, 103]
 ```
--rot13
+- rot13
 > rot-13 shifts the character by 13 units. 
 > Case is preserved
 > Is a *property*
@@ -363,7 +363,7 @@ lstr = lzstr('ABCdenoPQ')
 lstr.rot13
 >> 'NOPqrabCD'
 ```
--reversed
+- reversed
 > reversed returns a reversed string of self
 > is a *property*
 ```python
@@ -600,7 +600,7 @@ lzint(1551).round_sf(2)
 lzint(1551).round_sf(3)
 >> 1550
 ```
--reciprocal
+- reciprocal
 > *property* that returns the reciprocal of self
 ```python
 lzint(100).reciprocal
