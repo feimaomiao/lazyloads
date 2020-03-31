@@ -235,6 +235,20 @@ After shuffle:  {test.shuffle(rp=True)}
 		# Non existense case
 		self.assertEqual(test.next('a'),[])
 
+		var = [1,2,1,2]
+		test=lzlist(var)
+		self.assertEqual(test.next(1),[2,2])
+
+	def test_before(self):
+		var = [1,2,3,1,2,1]
+		test=lzlist(var)
+
+		self.assertEqual(test.before(2),[1,1])
+		self.assertEqual(test.before(1),[1,3,2])
+
+		self.assertEqual(test.before(3),[2])
+		self.assertEqual(test.before('a'),[])
+
 	def test_run_all(self):
 		# test function that will be called
 		def _t(v=1):
@@ -250,9 +264,7 @@ After shuffle:  {test.shuffle(rp=True)}
 			# start
 			100,
 			# end
-			300,
-			#seed
-			1234)
+			300)
 		self.assertTrue(len(test)==359)
 		self.assertTrue(all([i in range(100,300) for i in test]))
 
@@ -418,6 +430,10 @@ class test_lzint(unittest.TestCase):
 			val += 1
 		self.assertEqual(val,10)
 		self.assertTrue(1 in test)
+
+	def test_ifpositive(self):
+		self.assertTrue(lzint(1).ispositive)
+		self.assertFalse(lzint(-10).ispositive)
 
 	def test_len(self):
 		var = 101010

@@ -20,6 +20,7 @@ test_len (test_lzl.test_lzfloat) ... ok
 test_round_sf (test_lzl.test_lzfloat) ... ok
 test_significant_figures (test_lzl.test_lzfloat) ... ok
 test_divisible_by (test_lzl.test_lzint) ... ok
+test_ifpositive (test_lzl.test_lzint) ... ok
 test_iseven (test_lzl.test_lzint) ... ok
 test_isodd (test_lzl.test_lzint) ... ok
 test_iter (test_lzl.test_lzint) ... ok
@@ -30,13 +31,14 @@ test_all_index (test_lzl.test_lzlist) ... ok
 test_all_with_type (test_lzl.test_lzlist) ... ok
 test_all_without_type (test_lzl.test_lzlist) ... ok
 test_basic (test_lzl.test_lzlist) ... ok
+test_before (test_lzl.test_lzlist) ... ok
 test_choice (test_lzl.test_lzlist) ... ok
 test_count_type (test_lzl.test_lzlist) ... ok
 test_deepshuffle (test_lzl.test_lzlist) ... 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 For test lzl.deeppshuffle:
 Before shuffle: [1, 2, 3, 4, 5, 6, [7, 8, 9, [1, 2, 3, 4]]]
-After shuffle:  [5, 3, 1, 2, 4, [7, 9, 8, [4, 1, 2, 3]], 6]
+After shuffle:  [4, 6, [7, [3, 1, 2, 4], 9, 8], 3, 1, 2, 5]
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ok
 test_forall (test_lzl.test_lzlist) ... ok
@@ -52,7 +54,7 @@ test_shuffle (test_lzl.test_lzlist) ...
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 For test lzlist.shuffle:
 Before shuffle: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-After shuffle:  [2, 4, 7, 9, 1, 6, 3, 5, 8]
+After shuffle:  [5, 1, 2, 6, 8, 3, 7, 9, 4]
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ok
 test_similar_to (test_lzl.test_lzlist) ... ok
@@ -72,7 +74,7 @@ test_shuffle (test_lzl.test_lzstr) ...
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 For test lzstr.shuffle:
 Before shuffle: abcdefg
-After shuffle:  abgfedc
+After shuffle:  dfbcega
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ok
 test_sorted (test_lzl.test_lzstr) ... ok
@@ -81,6 +83,6 @@ test_sum_of_ints (test_lzl.test_lzstr) ... ok
 test_toord (test_lzl.test_lzstr) ... ok
 
 ----------------------------------------------------------------------
-Ran 55 tests in 0.544s
+Ran 57 tests in 0.024s
 
 OK
