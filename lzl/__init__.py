@@ -14,7 +14,7 @@ del time
 __all__ = ["lzlist","lzstr","lzdict","lzint","lzfloat"]
 __author__  = "Matthew Lam"
 __email__   = "lcpmatthew@gmail.com"
-__version__ = "1.0.0"   
+__version__ = "1.0.1"   
 __license__ = "MIT"
 
 class lzlist(list):
