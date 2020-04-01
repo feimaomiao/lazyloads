@@ -4,7 +4,6 @@ __pycache__/
 *$py.class
 */__pycache__/
 */cmp.py
-
 # C extensions
 *.so
 
