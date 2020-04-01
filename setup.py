@@ -2,9 +2,11 @@ import setuptools
 import re
 
 with open('lzl/__init__.py') as fh:
-	version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',fh.read(), re.MULTILINE).group(1)
-	author 	= re.search(r'^__author__\s*=\s*[\'"]([^\'"]+)[\'"]',fh.read(),re.MULTILINE).group(1)    
-	email  	= re.search(r'^__email__\s*=\s*[\'"]([^\'"]+)[\'"]',fh.read(),re.MULTILINE).group(1)    
+	_f = fh.read()
+
+version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',_f, re.MULTILINE).group(1)
+author 	= re.search(r'^__author__\s*=\s*[\'"]([^\'"]*)[\'"]',_f,re.MULTILINE).group(1)    
+email  	= re.search(r'^__email__\s*=\s*[\'"]([^\'"]*)[\'"]',_f,re.MULTILINE).group(1)    
 
 with open('README.md', 'r') as fh:
 	actual_description= fh.read()
