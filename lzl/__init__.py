@@ -11,11 +11,11 @@ from re import search as _se, sub as _sub
 _seed(time.time()*_randrange(1234,123456789))
 del time
 
-__all__ = ['lzlist','lzstr','lzdict','lzint','lzfloat']
-__author__  = 'Matthew Lam'
-__email__   = 'lcpmatthew@gmail.com'
-__version__ = '0.0.1'   
-__license__ = 'MIT'
+__all__ = ["lzlist","lzstr","lzdict","lzint","lzfloat"]
+__author__  = "Matthew Lam"
+__email__   = "lcpmatthew@gmail.com"
+__version__ = "1.0.0"   
+__license__ = "MIT"
 
 class lzlist(list):
 	def __init__(self, ip=[]):
@@ -24,7 +24,7 @@ class lzlist(list):
 
 	def __hash__(self):
 		_h = _sha512()
-		[_h.update(str(i).encode('utf-32')) for i in self]
+		[_h.update(str(i).encode("utf-32")) for i in self]
 		return int(_h.hexdigest(),16)
 
 	def includes_type(self,tp):
@@ -32,8 +32,7 @@ class lzlist(list):
 
 	def revert(self):
 		super().__init__(_dc(self.__copy))
-		return self 
-	
+		return self
 
 	@property
 	def list_types(self):
@@ -73,7 +72,7 @@ class lzlist(list):
 			if _t == list:
 				continue
 			try:
-				_r.append(_t(_se(f'^.*{str(sstr)}.*$', str(i)).group(0)))
+				_r.append(_t(_se(f"^.*{str(sstr)}.*$", str(i)).group(0)))
 			except Exception:
 				continue
 		return lzlist(_r)
@@ -138,12 +137,12 @@ class lzlist(list):
 	def count_type(self, t):
 		return len(self.all_with_type(t))
 
-	def forall(self,t='product'):
-		if t.startswith('pr'):
+	def forall(self,t="product"):
+		if t.startswith("pr"):
 			_k = list([list(i) for i in _product(self,repeat=2)])
-		elif t.startswith('pe'):
+		elif t.startswith("pe"):
 			_k = list([list(i) for i in _permutations(self,2)])
-		elif t.startswith('c') and t.endswith('s'):
+		elif t.startswith("c") and t.endswith("s"):
 			_k = list([list(i) for i in _combinations(self,2)])
 		else:
 			_k = list([list(i) for i in _combinations_with_replacement(self,2)])
@@ -151,7 +150,7 @@ class lzlist(list):
 
 	@property
 	def tostr(self):
-		return ''.join([chr(round(i)) for i in self.all_with_type((int,float))])
+		return "".join([chr(round(i)) for i in self.all_with_type((int,float))])
 
 	def next(self, askval=None):
 		if not askval:
@@ -223,42 +222,42 @@ class lzstr(str):
 	@property
 	def rot13(self):
 		from codecs import encode
-		_k = encode(self, 'rot_13')
+		_k = encode(self, "rot_13")
 		del encode
 		return lzstr(_k)
 
 	@property
 	def reversed(self):
-		return lzstr(_dc(lzstr(''.join(reversed(list(self))))))
+		return lzstr(_dc(lzstr("".join(reversed(list(self))))))
 
 	def remove(self,n):
-		_k = lzstr(_sub(str(n), '',self))
+		_k = lzstr(_sub(str(n), "",self))
 		return _k
 
 	@property
 	def sorted(self):
-		return lzstr(''.join(sorted(self)))
+		return lzstr("".join(sorted(self)))
 
 	def split_by(self, end):
 		return [self[i:i+end] for i in range(0,len(self),end)]
 
-	def fill(self,tl,ends='0'):
+	def fill(self,tl,ends="0"):
 		return self+str(ends)*(tl-len(self))
 
 	def shuffle(self):
 		_k=lzlist(self)
 		_k.shuffle(rp=True)
-		return ''.join(_k.shuffle())
+		return "".join(_k.shuffle())
 
 	def join_all_ints(self):
-		return lzint(''.join([i for i in self if i.isdigit()]))
+		return lzint("".join([i for i in self if i.isdigit()]))
 
 	def sum_of_ints(self):
 		return lzint(sum([int(i) for i in self if i.isdigit()]))
 
 	@staticmethod
 	def randstring(l):
-		return ''.join([_choice(_ascii_chars+_digs) for i in lzint(l)])
+		return "".join([_choice(_ascii_chars+_digs) for i in lzint(l)])
 
 
 class lzdict(dict):
@@ -267,8 +266,8 @@ class lzdict(dict):
 
 	def __hash__(self):
 		_h = _sha512()
-		[_h.update(str(i).encode('utf-32')) for i in self.listkeys]
-		[_h.update(str(i).encode('utf-32')) for i in self.listvalues]
+		[_h.update(str(i).encode("utf-32")) for i in self.listkeys]
+		[_h.update(str(i).encode("utf-32")) for i in self.listvalues]
 		return int(_h.hexdigest(),16)
 
 	@property
@@ -311,7 +310,7 @@ class lzdict(dict):
 		for i in self.listkeys:
 			_t = type(i)
 			try:
-				_r.append(_t(_se(f'^.*{str(searchstring)}.*$',str(i)).group(0)))
+				_r.append(_t(_se(f"^.*{str(searchstring)}.*$",str(i)).group(0)))
 			except AttributeError:
 				continue
 		return lzdict({i:self[i] for i in _r})
@@ -321,7 +320,7 @@ class lzdict(dict):
 		for i in self.listvalues:
 			_t = type(i)
 			try:
-				_r.append(_t(_se(f'^.*{str(searchstring)}.*$',str(i)).group(0)))
+				_r.append(_t(_se(f"^.*{str(searchstring)}.*$",str(i)).group(0)))
 			except AttributeError:
 				continue
 		return lzdict({i:self[i] for i in lzlist([self.get_fromvalue(i) for i in _r]).join_all()})
@@ -364,19 +363,19 @@ class lzfloat(float):
 		return lzint(round(self)).__iter__()
 
 	def __len__(self):
-		return len(''.join(str(self).split('.')))
+		return len("".join(str(self).split(".")))
 
 	@property
 	def digits_afterzero(self):
-		return len(str(self).split('.')[1])
+		return len(str(self).split(".")[1])
 
 	@property
 	def digits_beforezero(self):
-		return len(str(self).lstrip('0').split('.')[0])
+		return len(str(self).lstrip("0").split(".")[0])
 
 	@property 
 	def significant_figures(self):
-		return len(str(self).lstrip('0.').rtrip('0'))
+		return len(str(self).lstrip("0.").rtrip("0"))
 
 	def round_sf(self, l):
 		if l>self.digits_beforezero:
